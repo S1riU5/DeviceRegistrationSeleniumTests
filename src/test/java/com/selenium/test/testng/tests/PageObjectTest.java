@@ -31,6 +31,7 @@ public class PageObjectTest {
         YouTubePage youTubePage = new YouTubePage();
         youTubePage.insertSearchString(toSearch);
         YouTubeSearchResultsPage resultsPage = youTubePage.doSearch();
+
         assertTrue("No results were found on results page", resultsPage.hasResults());
     }
 
