@@ -32,6 +32,9 @@ public class testDeviceRegistrationLogin {
 
 
 
+
+
+
     @AfterTest
     public void afterTest() {
         WebDriverFactory.finishBrowser();
