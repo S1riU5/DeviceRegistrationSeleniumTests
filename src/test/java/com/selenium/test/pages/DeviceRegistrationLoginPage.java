@@ -2,8 +2,6 @@ package com.selenium.test.pages;
 
 import com.selenium.test.pages.Utils.Utils;
 import com.selenium.test.webtestsbase.BasePage;
-import com.selenium.test.webtestsbase.WebDriverFactory;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -50,25 +48,25 @@ public class DeviceRegistrationLoginPage extends BasePage{
         return passwordField.isDisplayed();
     }
 
-    public DeviceRegistrationDevicePage login(String email, String password){
+    public DevicePage login(String email, String password){
         emailField.sendKeys(email);
         passwordField.sendKeys(password);
         submitButton.click();
         Utils.waitForPageLoad(2,TimeUnit.SECONDS);
-        return new DeviceRegistrationDevicePage();
+        return new DevicePage();
     }
 
-    public DeviceRegistrationForgotPasswordPage forgotPassword(){
+    public ForgotPasswordPage forgotPassword(){
         forgotPasswordLink.click();
         Utils.waitForPageLoad(2,TimeUnit.SECONDS);
-        return new DeviceRegistrationForgotPasswordPage();
+        return new ForgotPasswordPage();
     }
 
-    public DeviceRegistrationCreateAccountPage createAccount(){
+    public CreateAccountPage createAccount(){
         createAccountLink.click();
         Utils.waitForPageLoad(2,TimeUnit.SECONDS);
 
-        return new DeviceRegistrationCreateAccountPage();
+        return new CreateAccountPage();
     }
 
 }

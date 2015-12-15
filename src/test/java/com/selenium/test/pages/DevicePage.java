@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created on 30/11/15.
  */
-public class DeviceRegistrationDevicePage {
+public class DevicePage {
 
 	@FindBy(className="dropdown-toggle")
 	private WebElement menu = WebDriverFactory.getDriver().findElement(By.className("dropdown-toggle"));;

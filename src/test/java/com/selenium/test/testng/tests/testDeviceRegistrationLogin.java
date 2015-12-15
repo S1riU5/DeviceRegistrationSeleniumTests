@@ -1,7 +1,7 @@
 package com.selenium.test.testng.tests;
 
 import com.selenium.test.pages.DeviceRegistrationLoginPage;
-import com.selenium.test.pages.DeviceRegistrationDevicePage;
+import com.selenium.test.pages.DevicePage;
 import com.selenium.test.webtestsbase.WebDriverFactory;
 import org.testng.AssertJUnit;
 import org.testng.annotations.AfterTest;
@@ -23,11 +23,11 @@ public class testDeviceRegistrationLogin {
 
     @Test
     public void testLogin() {
-        DeviceRegistrationDevicePage deviceRegistrationDevicePage;
+        DevicePage devicePage;
         DeviceRegistrationLoginPage deviceRegistrationLoginPage = new DeviceRegistrationLoginPage();
-        deviceRegistrationDevicePage = deviceRegistrationLoginPage.login("local@ceventis.com", "password");
+        devicePage = deviceRegistrationLoginPage.login("local@ceventis.com", "password");
         AssertJUnit.assertEquals(WebDriverFactory.getDriver().getCurrentUrl(), "http://localhost:9000/#/devices");
-        deviceRegistrationDevicePage.Logout();
+        devicePage.Logout();
     }
 
 

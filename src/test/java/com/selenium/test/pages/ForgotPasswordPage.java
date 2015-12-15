@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created on 30/11/15.
  */
-public class DeviceRegistrationForgotPasswordPage {
+public class ForgotPasswordPage {
 
 	@FindBy(name="email")
 	private WebElement email;
