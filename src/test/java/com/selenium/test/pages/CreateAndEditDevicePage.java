@@ -188,7 +188,7 @@ public class CreateAndEditDevicePage extends BasePage {
 
     public DevicePage save() {
         Utils.clickAndWait(save);
-        return new DevicePage();
+        return new DevicePage(false);
     }
 
 

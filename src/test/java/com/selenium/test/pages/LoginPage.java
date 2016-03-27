@@ -30,6 +30,9 @@ public class LoginPage extends BasePage {
     @FindBy(css = "span.text-u-l")
     private WebElement createAccountLink;
 
+    @FindBy(css = "div.alert")
+    private WebElement errorMessage;
+
     public LoginPage() {
         super(true);
         WebDriverFactory.getDriver().manage().window().maximize();
@@ -49,6 +52,10 @@ public class LoginPage extends BasePage {
         emailField.sendKeys(email);
         passwordField.sendKeys(password);
         Utils.clickAndWait(submitButton);
+        if (isErrorDisplayed()) {
+            return null;
+        }
+        
         return new DevicePage();
     }
 
@@ -61,6 +68,10 @@ public class LoginPage extends BasePage {
     public CreateAccountPage createAccount() {
         Utils.clickAndWait(createAccountLink);
         return new CreateAccountPage();
+    }
+
+    public boolean isErrorDisplayed() {
+        return errorMessage.isDisplayed();
     }
 
 }

@@ -16,13 +16,11 @@ import java.util.List;
 
 public class DevicePage extends BasePage {
 
+    public static final int VIEW_DEVICE_LINK_POSITION = 1;
     private static final String BASE_URL = "http://localhost:9000/#/devices";
     private static final String DEVICES_TAG_NAME = "md-card";
     private static final String SEARCH_FIELD_CSS = "input[type=text]";
     private static final String LABEL_FIELDS_CSS = "ng-binding";
-    public static final int VIEW_DEVICE_LINK_POSITION = 1;
-
-
     @FindBy(className = "navbar-collapse")
     private WebElement headerNavigation;
 
@@ -58,7 +56,6 @@ public class DevicePage extends BasePage {
         return new LoginPage();
     }
 
-    //TODO ADD Admin class to project and return the Admin class
     public void clickOnAdminLink() {
         menu.click();
         adminLink = WebDriverFactory
@@ -67,7 +64,7 @@ public class DevicePage extends BasePage {
         Utils.clickAndWait(adminLink);
     }
 
-    //TODO ADD Profile class to project and return profileLink class
+
     public void clickProfileLink() {
         menu.click();
         Utils.clickAndWait(profileLink);
@@ -139,7 +136,7 @@ public class DevicePage extends BasePage {
             String[] strings = webElementList.get(i).getText().split(": ");
             deviceInformation.put(tmp.get(i), strings[1]);
         }
-        deviceInformation.put(DeviceInformation.LABEL, currentDevices().get(position).findElement(By.tagName("h3")).getText());
+        deviceInformation.put(DeviceInformation.LABEL, currentDevices().get(position).findElement(By.cssSelector("span.label")).getText());
 
         return deviceInformation;
     }

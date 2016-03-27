@@ -1,6 +1,9 @@
 package com.selenium.test.testng.tests;
 
-import com.selenium.test.pages.*;
+import com.selenium.test.pages.CreateAndEditDevicePage;
+import com.selenium.test.pages.DetailView;
+import com.selenium.test.pages.DevicePage;
+import com.selenium.test.pages.LoginPage;
 import com.selenium.test.pages.enums.DeviceInformation;
 import com.selenium.test.webtestsbase.WebDriverFactory;
 import org.testng.AssertJUnit;
@@ -8,7 +11,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -21,20 +23,21 @@ public class testDeviceRegistrationLogin {
         WebDriverFactory.startBrowser(true);
     }
 
+
     @Test
-    public void playground() {
+    public void testLoginPositive() {
+        DevicePage devicePage;
         LoginPage loginPage = new LoginPage();
-        CreateAccountPage createAccountPage = loginPage.createAccount();
-        createAccountPage.Register("TEst", "test", "test", "test");
+        devicePage = loginPage.login("admin@ceventis.com", "password");
+        AssertJUnit.assertEquals(WebDriverFactory.getDriver().getCurrentUrl(), "http://localhost:9000/#/devices");
+        devicePage.logout();
     }
 
     @Test
-    public void testLogin() {
-        DevicePage devicePage;
-        LoginPage deviceRegistrationLoginPage = new LoginPage();
-        devicePage = deviceRegistrationLoginPage.login("admin@ceventis.com", "password");
-        AssertJUnit.assertEquals(WebDriverFactory.getDriver().getCurrentUrl(), "http://localhost:9000/#/devices");
-        devicePage.logout();
+    public void testLoginNegativ() {
+        LoginPage loginPage = new LoginPage();
+        loginPage.login("test@test.de", "tester");
+        AssertJUnit.assertEquals(true, loginPage.isErrorDisplayed());
     }
 
 
@@ -57,7 +60,7 @@ public class testDeviceRegistrationLogin {
     }
 
     @Test
-    public void deviceViewContainsCorrectData() {
+    public void deviceListContainsCorrectData() {
 
         DevicePage devicePage = validLogin();
         String label;
@@ -65,12 +68,37 @@ public class testDeviceRegistrationLogin {
         String group;
         String category;
 
-        HashMap<DeviceInformation, String> deviceInformations = devicePage.getDeviceInformation(1);
-        label = deviceInformations.get(DeviceInformation.LABEL);
-        serial = deviceInformations.get(DeviceInformation.SERIAL_NUMBER);
-        group = deviceInformations.get(DeviceInformation.GROUP);
-        category = deviceInformations.get(DeviceInformation.CATEGORY);
-        //TODO write test
+        String labelList;
+        String serialList;
+        String groupList;
+        String categoryList;
+
+        CreateAndEditDevicePage createAndEditDevicePage = devicePage.edit(0);
+
+        createAndEditDevicePage.setCategory(0);
+        category = createAndEditDevicePage.getCategory();
+
+        createAndEditDevicePage.setLabels("test");
+        label = createAndEditDevicePage.getLabels();
+
+        createAndEditDevicePage.setGroup(1);
+        group = createAndEditDevicePage.getGroup();
+
+        createAndEditDevicePage.setSerialNumber("12345678");
+        serial = createAndEditDevicePage.getSerialNumber();
+
+        devicePage = createAndEditDevicePage.save();
+
+        HashMap<DeviceInformation, String> deviceInformations = devicePage.getDeviceInformation(0);
+        labelList = deviceInformations.get(DeviceInformation.LABEL);
+        serialList = deviceInformations.get(DeviceInformation.SERIAL_NUMBER);
+        groupList = deviceInformations.get(DeviceInformation.GROUP);
+        categoryList = deviceInformations.get(DeviceInformation.CATEGORY);
+
+        AssertJUnit.assertEquals(label, labelList);
+        AssertJUnit.assertEquals(serial, serialList);
+        AssertJUnit.assertEquals(group, groupList);
+        AssertJUnit.assertEquals(category, categoryList);
 
     }
 
@@ -89,7 +117,6 @@ public class testDeviceRegistrationLogin {
         createAndEditDevicePage.toggleMaintenance();
         createAndEditDevicePage.toggleNotification();
         createAndEditDevicePage.setInterval(1);
-        createAndEditDevicePage.setStartDate(new Date());
         createAndEditDevicePage.setReminder(1);
         createAndEditDevicePage.setEmail("test@test.de");
 
@@ -102,7 +129,6 @@ public class testDeviceRegistrationLogin {
         String desig = createAndEditDevicePage.getDesignation();
         String email = createAndEditDevicePage.getEmail();
         String reminder = createAndEditDevicePage.getReminder();
-        String interval = createAndEditDevicePage.getInterval();
         String start = createAndEditDevicePage.getStartDate();
 
         devicePage = createAndEditDevicePage.save();
@@ -117,7 +143,6 @@ public class testDeviceRegistrationLogin {
         String desigView = detailView.getDesignation();
         String emailView = detailView.getEmail();
         String reminderVeiw = detailView.getReminder();
-        String intervalView = detailView.getInterval();
         String startView = detailView.getPeriodStart();
 
         AssertJUnit.assertEquals(cat, catView);
@@ -129,7 +154,6 @@ public class testDeviceRegistrationLogin {
         AssertJUnit.assertEquals(desig, desigView);
         AssertJUnit.assertEquals(reminder, reminderVeiw);
         AssertJUnit.assertEquals(email, emailView);
-        AssertJUnit.assertEquals(interval, intervalView);
         AssertJUnit.assertEquals(start, startView);
 
 
