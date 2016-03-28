@@ -54,13 +54,13 @@ public class CreateAccountPage extends BasePage {
      * @param invitationCode
      * @return DevicePage
      */
-    public DevicePage Register(String email, String firstName, String lastName, String invitationCode) {
+    public LoginPage Register(String email, String firstName, String lastName, String invitationCode) {
         emailAdressField.sendKeys(email);
         firstNameField.sendKeys(firstName);
         lastNameField.sendKeys(lastName);
         invitationCodeField.sendKeys(invitationCode);
         Utils.clickAndWait(registerButton);
-        return new DevicePage();
+        return new LoginPage();
     }
 
 

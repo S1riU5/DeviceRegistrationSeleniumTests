@@ -1,28 +1,37 @@
 package com.selenium.test.testng.tests;
 
-import com.selenium.test.pages.CreateAndEditDevicePage;
-import com.selenium.test.pages.DetailView;
-import com.selenium.test.pages.DevicePage;
-import com.selenium.test.pages.LoginPage;
+import com.selenium.test.pages.*;
+import com.selenium.test.pages.Utils.Utils;
 import com.selenium.test.pages.enums.DeviceInformation;
 import com.selenium.test.webtestsbase.WebDriverFactory;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.AssertJUnit;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by simongyimah on 23/11/15.
  */
 public class testDeviceRegistrationLogin {
 
+    private static List<String> guestUrls = new ArrayList<String>() {{
+        add("http://localhost:9000/#/register");
+        add("http://localhost:9000/#/login");
+        add("http://localhost:9000/#/forgotpwd");
+    }};
+
     @BeforeTest
     public void beforeTest() {
         WebDriverFactory.startBrowser(true);
     }
-
 
     @Test
     public void testLoginPositive() {
@@ -30,11 +39,10 @@ public class testDeviceRegistrationLogin {
         LoginPage loginPage = new LoginPage();
         devicePage = loginPage.login("admin@ceventis.com", "password");
         AssertJUnit.assertEquals(WebDriverFactory.getDriver().getCurrentUrl(), "http://localhost:9000/#/devices");
-        devicePage.logout();
     }
 
     @Test
-    public void testLoginNegativ() {
+    public void testLoginNegative() {
         LoginPage loginPage = new LoginPage();
         loginPage.login("test@test.de", "tester");
         AssertJUnit.assertEquals(true, loginPage.isErrorDisplayed());
@@ -42,13 +50,14 @@ public class testDeviceRegistrationLogin {
 
 
     @Test
-    public void registration() {
+    public void testRegistration() {
         LoginPage loginPage = new LoginPage();
-        loginPage.createAccount();
+        CreateAccountPage createAccountPage = loginPage.createAccount();
+        createAccountPage.Register("test@test.de", "peter", "müller", "1231231231");
     }
 
     @Test
-    public void forgotPassword() {
+    public void testForgotPassword() {
         LoginPage loginPage = new LoginPage();
         loginPage.forgotPassword();
     }
@@ -174,12 +183,8 @@ public class testDeviceRegistrationLogin {
         afterDelete = devicePage.deviceCount();
         labelNew = devicePage.getDeviceInformation(0).get(DeviceInformation.LABEL);
 
-        devicePage.logout();
-
         AssertJUnit.assertNotSame(beforeDelete, afterDelete);
         AssertJUnit.assertNotSame(labelOld, labelNew);
-
-
     }
 
     @Test
@@ -201,9 +206,30 @@ public class testDeviceRegistrationLogin {
     }
 
 
-    @AfterTest
+    @AfterMethod
     public void afterTest() {
+        if (isLoggedIn()) {
+            WebElement menu = WebDriverFactory.getDriver().findElement(By.className("dropdown-toggle"));
+            Utils.clickAndWait(menu);
+            WebElement logoutLink = WebDriverFactory.getDriver().findElement(By.linkText("Logout"));
+            Utils.clickAndWait(logoutLink);
+            Utils.waitForPageLoad(Utils.TIMEOUTINSECONDS, TimeUnit.SECONDS);
+
+        } else {
+            WebDriverFactory.getDriver().get("http://localhost:9000/#/login");
+            Utils.waitForPageLoad(Utils.TIMEOUTINSECONDS, TimeUnit.SECONDS);
+        }
+
+    }
+
+
+    @AfterTest
+    public void afterAll() {
         WebDriverFactory.finishBrowser();
+    }
+
+    private boolean isLoggedIn() {
+        return !guestUrls.contains(WebDriverFactory.getDriver().getCurrentUrl());
     }
 }
 

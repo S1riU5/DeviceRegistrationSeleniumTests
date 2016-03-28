@@ -3,6 +3,7 @@ package com.selenium.test.pages;
 import com.selenium.test.pages.Utils.Utils;
 import com.selenium.test.webtestsbase.BasePage;
 import com.selenium.test.webtestsbase.WebDriverFactory;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -49,18 +50,21 @@ public class LoginPage extends BasePage {
     }
 
     public DevicePage login(String email, String password) {
-        emailField.sendKeys(email);
-        passwordField.sendKeys(password);
+        Utils.enterAndWait(emailField, email);
+        Utils.enterAndWait(passwordField, password);
         Utils.clickAndWait(submitButton);
-        if (isErrorDisplayed()) {
+        try {
+            isErrorDisplayed();
             return null;
+        } catch (NoSuchElementException e) {
+
         }
-        
+
         return new DevicePage();
     }
 
     public ForgotPasswordPage forgotPassword() {
-        forgotPasswordLink.click();
+        Utils.clickAndWait(forgotPasswordLink);
         Utils.waitForScript(20, TimeUnit.SECONDS);
         return new ForgotPasswordPage();
     }
